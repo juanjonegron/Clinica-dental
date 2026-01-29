@@ -1,0 +1,123 @@
+Para comenzar debemos habilitar la característica de virtualización en la UEFI o BIOS si nuestro PC es maquina más antigua y luego descargar e instalar DOCKER 
+
+docker run -d --name trabajo-grupal -p 80:80 nginx  esto crear contenedor llamado trabajo-grupal usando una imagen NGINX como servidor web en el puerto 80 y lo apunta al localhost puerto 80.
+Como no existía ni contenedor ni imagen anterior arrojo el mensaje: “Unable to find image 'nginx:latest' locally”
+latest: Pulling from library/nginx / el Sistema DOCKER procede a descargar la última versión de NGINX 
+Status: Downloaded newer image for nginx:latest / finalize la descarga de NGINX
+docker ps --filter \"name=trabajo-grupal\ (opcional) sirve para buscar y filtrar los contenedores que se llaman “trabajo grupal”.
+
+
+//WEB Clinica Dental
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Centro Dental - Sistema de Gestión</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Centro Dental</h1>
+            <p class="subtitle">Sistema de Gestión y Consultas</p>
+        </header>
+
+        <!-- Estadísticas -->
+        <section class="statistics" id="statistics">
+            <div class="stat-card">
+                <h3 id="totalPacientes">0</h3>
+                <p>Pacientes</p>
+            </div>
+            <div class="stat-card">
+                <h3 id="totalDentistas">0</h3>
+                <p>Dentistas</p>
+            </div>
+            <div class="stat-card">
+                <h3 id="totalCitas">0</h3>
+                <p>Citas</p>
+            </div>
+            <div class="stat-card">
+                <h3 id="saldoPendiente">$0</h3>
+                <p>Saldo Pendiente</p>
+            </div>
+        </section>
+
+        <!-- Tabs de Búsqueda -->
+        <section class="search-tabs">
+            <button class="tab-btn active" data-tab="pacientes">Pacientes</button>
+            <button class="tab-btn" data-tab="dentistas">Dentistas</button>
+            <button class="tab-btn" data-tab="citas">Citas</button>
+        </section>
+
+        <!-- Barra de Búsqueda -->
+        <section class="search-section">
+            <input type="text" id="searchInput" placeholder="Buscar por nombre, RUT, especialidad, fecha...">
+            <button id="searchBtn">Buscar</button>
+        </section>
+
+        <!-- Resultados de Búsqueda -->
+        <section class="results" id="results">
+            <div class="empty-state">
+                <p>Selecciona una categoría y realiza una búsqueda</p>
+            </div>
+        </section>
+
+        <!-- Modal de Detalles -->
+        <div id="modal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <div id="modalBody"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
+ 
+
+//BD Clinica Dental//
+version: '3.8'
+
+services:
+  db:
+    image: mariadb:latest
+    container_name: centro-dental-db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_DATABASE: centro_dental
+      MYSQL_USER: dental_user
+      MYSQL_PASSWORD: dental_pass
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./database:/docker-entrypoint-initdb.d
+      - db_data:/var/lib/mysql
+    networks:
+      - dental-network
+
+  web:
+    build: .
+    container_name: trabajo-grupal
+    restart: always
+    ports:
+      - "80:80"
+    depends_on:
+      - db
+    environment:
+      DB_HOST: db
+      DB_NAME: centro_dental
+      DB_USER: dental_user
+      DB_PASSWORD: dental_pass
+    networks:
+      - dental-network
+
+volumes:
+  db_data:
+
+networks:
+  dental-network:
+    driver: bridge
