@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  db:
+    image: mariadb:latest
+    container_name: centro-dental-db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_DATABASE: centro_dental
+      MYSQL_USER: dental_user
+      MYSQL_PASSWORD: dental_pass
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./database:/docker-entrypoint-initdb.d
+      - db_data:/var/lib/mysql
+    networks:
+      - dental-network
+
+  web:
+    build: .
+    container_name: trabajo-grupal
+    restart: always
+    ports:
+      - "80:80"
+    depends_on:
+      - db
+    environment:
+      DB_HOST: db
+      DB_NAME: centro_dental
+      DB_USER: dental_user
+      DB_PASSWORD: dental_pass
+    networks:
+      - dental-network
+
+volumes:
+  db_data:
+
+networks:
+  dental-network:
+    driver: bridge

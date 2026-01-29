@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Centro Dental - Sistema de Gestión</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Centro Dental</h1>
+            <p class="subtitle">Sistema de Gestión y Consultas</p>
+        </header>
+
+        <!-- Estadísticas -->
+        <section class="statistics" id="statistics">
+            <div class="stat-card">
+                <h3 id="totalPacientes">0</h3>
+                <p>Pacientes</p>
+            </div>
+            <div class="stat-card">
+                <h3 id="totalDentistas">0</h3>
+                <p>Dentistas</p>
+            </div>
+            <div class="stat-card">
+                <h3 id="totalCitas">0</h3>
+                <p>Citas</p>
+            </div>
+            <div class="stat-card">
+                <h3 id="saldoPendiente">$0</h3>
+                <p>Saldo Pendiente</p>
+            </div>
+        </section>
+
+        <!-- Tabs de Búsqueda -->
+        <section class="search-tabs">
+            <button class="tab-btn active" data-tab="pacientes">Pacientes</button>
+            <button class="tab-btn" data-tab="dentistas">Dentistas</button>
+            <button class="tab-btn" data-tab="citas">Citas</button>
+        </section>
+
+        <!-- Barra de Búsqueda -->
+        <section class="search-section">
+            <input type="text" id="searchInput" placeholder="Buscar por nombre, RUT, especialidad, fecha...">
+            <button id="searchBtn">Buscar</button>
+        </section>
+
+        <!-- Resultados de Búsqueda -->
+        <section class="results" id="results">
+            <div class="empty-state">
+                <p>Selecciona una categoría y realiza una búsqueda</p>
+            </div>
+        </section>
+
+        <!-- Modal de Detalles -->
+        <div id="modal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <div id="modalBody"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
